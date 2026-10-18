@@ -10,8 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 /**
  * 全局异常处理：保持响应结构统一，且不向外暴露堆栈信息。
  */
@@ -46,15 +44,6 @@ public class GlobalExceptionHandler {
         String message = fieldError != null ? fieldError.getDefaultMessage() : MessageConstant.UNKNOWN_ERROR;
         log.warn("validation ex: {}", message);
         return Result.error(message);
-    }
-
-    /**
-     * SQL 完整性约束（如唯一索引冲突）。
-     */
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public Result<Void> handleSqlIntegrityException(SQLIntegrityConstraintViolationException ex) {
-        log.error("sql ex: {}", ex.getMessage());
-        return Result.error(MessageConstant.UNKNOWN_ERROR);
     }
 
     /**

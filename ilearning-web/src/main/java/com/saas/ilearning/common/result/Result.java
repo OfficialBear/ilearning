@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 public class Result<T> implements Serializable {
     /**
-     * 1: success, 0: failure
+     * 0: success, -1: failure
      */
     private Integer code;
     private String msg;
@@ -21,14 +21,14 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> success() {
         Result<T> result = new Result<T>();
-        result.code = 1;
+        result.code = 0;
         result.msg = "ok";
         return result;
     }
 
     public static <T> Result<T> success(T object) {
         Result<T> result = new Result<T>();
-        result.code = 1;
+        result.code = 0;
         result.msg = "ok";
         result.data = object;
         return result;
@@ -36,7 +36,7 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> error(String msg) {
         Result<T> result = new Result<T>();
-        result.code = 0;
+        result.code = -1;
         result.msg = msg;
         return result;
     }
