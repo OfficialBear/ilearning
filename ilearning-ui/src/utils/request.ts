@@ -20,6 +20,14 @@ export class ApiError extends Error {
   }
 }
 
+type UnauthorizedHandler = () => void;
+
+let unauthorizedHandler: UnauthorizedHandler | null = null;
+
+export function setUnauthorizedHandler(handler: UnauthorizedHandler | null): void {
+  unauthorizedHandler = handler;
+}
+
 const API_BASE: string = (import.meta.env.VITE_API_BASE_URL ?? '/api')
   .replace(/\/+$/, '') || '/api';
 const REQUEST_TIMEOUT_MS = 10_000;
@@ -100,6 +108,13 @@ const client = axios.create({
   },
 });
 
+client.interceptors.response.use(undefined, (error: unknown) => {
+  if (axios.isAxiosError(error) && error.response?.status === 401) {
+    unauthorizedHandler?.();
+  }
+  return Promise.reject(error);
+});
+
 function toApiError(error: unknown): ApiError {
   if (error instanceof ApiError) {
     return error;
@@ -124,7 +139,7 @@ function toApiError(error: unknown): ApiError {
  * 发起后端请求并解包 Result<T>：
  * - code === 0 → 返回 data
  * - code === -1 或 HTTP 非 2xx → 抛 ApiError（携带后端 msg）
- * 默认携带 Cookie（credentials: 'include'）。
+ * 始终携带会话 Cookie，与后端 Session 鉴权配合。
  */
 export async function request<T>(
   path: string,

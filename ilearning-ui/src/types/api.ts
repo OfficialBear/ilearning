@@ -7,3 +7,18 @@ export interface ApiResult<T> {
   msg: string;
   data?: T;
 }
+
+/**
+ * 当前登录用户信息（对应后端 UserInfoVO，不含敏感字段）。
+ */
+export interface UserInfo {
+  id: number;
+  userName: string;
+  realName: string | null;
+  roles: string[] | null;
+}
+
+export interface LoginPayload {
+  username: string;
+  password: string;
+}
