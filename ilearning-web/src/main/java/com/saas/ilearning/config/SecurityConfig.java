@@ -1,5 +1,6 @@
 package com.saas.ilearning.config;
 
+import com.saas.ilearning.common.constant.RoleConstant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/questions", "/questions/**",
+                                "/question-banks", "/question-banks/**").hasRole(RoleConstant.ADMIN)
                         .anyRequest().authenticated())
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(restAuthenticationEntryPoint)

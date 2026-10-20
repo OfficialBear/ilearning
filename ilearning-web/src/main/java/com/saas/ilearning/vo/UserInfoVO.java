@@ -23,9 +23,9 @@ public class UserInfoVO implements Serializable {
 
     private Long id;
 
-    private String userName;
+    private String username;
 
-    private String realName;
+    private String nickname;
 
     private List<String> roles;
 
@@ -38,8 +38,8 @@ public class UserInfoVO implements Serializable {
         }
         return UserInfoVO.builder()
                 .id(user.getId())
-                .userName(user.getUserName())
-                .realName(user.getRealName())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
                 .roles(Collections.emptyList())
                 .build();
     }

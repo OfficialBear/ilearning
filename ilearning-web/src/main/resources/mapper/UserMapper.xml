@@ -4,19 +4,19 @@
 
     <!-- 与 docs/db/ddl.sql 的 user 表结构对齐 -->
     <sql id="baseColumns">
-        id, user_name, real_name, password, status, created_at, updated_at
+        id, username, nickname, password, status, created_at, updated_at
     </sql>
 
     <select id="getByUsername" resultType="com.saas.ilearning.entity.User">
         SELECT
         <include refid="baseColumns"/>
         FROM `user`
-        WHERE `user_name` = #{userName}
+        WHERE `username` = #{username}
         LIMIT 1
     </select>
 
-    <select id="getRoleNamesByUserId" resultType="java.lang.String">
-        SELECT r.`role_name`
+    <select id="getRoleCodesByUserId" resultType="java.lang.String">
+        SELECT r.`role_code`
         FROM `user_role` ur
         JOIN `role` r ON r.`id` = ur.`role_id`
         WHERE ur.`user_id` = #{userId}
@@ -24,14 +24,14 @@
     </select>
 
     <insert id="insert" parameterType="com.saas.ilearning.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO `user` (`user_name`, `real_name`, `password`, `status`)
-        VALUES (#{userName}, #{realName}, #{password}, #{status})
+        INSERT INTO `user` (`username`, `nickname`, `password`, `status`)
+        VALUES (#{username}, #{nickname}, #{password}, #{status})
     </insert>
 
-    <select id="getRoleIdByName" resultType="java.lang.Long">
+    <select id="getRoleIdByCode" resultType="java.lang.Long">
         SELECT `id`
         FROM `role`
-        WHERE `role_name` = #{roleName}
+        WHERE `role_code` = #{roleCode}
     </select>
 
     <insert id="batchInsertUserRoles">

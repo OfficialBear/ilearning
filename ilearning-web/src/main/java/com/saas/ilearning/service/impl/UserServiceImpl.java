@@ -41,22 +41,23 @@ public class UserServiceImpl implements UserService {
             throw new BaseException(MessageConstant.USERNAME_EXISTS);
         }
 
+        String nickname = registerDTO.getNickname() == null ? null : registerDTO.getNickname().trim();
         User user = User.builder()
-                .userName(username)
-                .realName(registerDTO.getRealName() == null ? "" : registerDTO.getRealName().trim())
+                .username(username)
+                .nickname(nickname == null || nickname.isEmpty() ? null : nickname)
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
                 .status(StatusConstant.ENABLED)
                 .build();
         try {
             userMapper.insert(user);
         } catch (DuplicateKeyException ex) {
-            // 注册并发窗口下用户名查重可能穿透，由 uk_username 唯一索引兜底
+            // 注册并发窗口下用户名查重可能穿透，由 uk_user_name 唯一索引兜底
             log.warn("register duplicate username: {}", username);
             throw new BaseException(MessageConstant.USERNAME_EXISTS);
         }
 
         // 默认 USER 角色：不写则新用户 getAuthorities() 为空，任何 hasRole('USER') 接口直接 403
-        Long userRoleId = userMapper.getRoleIdByName(RoleConstant.USER);
+        Long userRoleId = userMapper.getRoleIdByCode(RoleConstant.USER);
         if (userRoleId == null) {
             throw new IllegalStateException("role '" + RoleConstant.USER + "' missing in table `role` (dml.sql seed not applied)");
         }

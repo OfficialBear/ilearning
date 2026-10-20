@@ -42,7 +42,7 @@ public class CurrentUser implements UserDetails, Serializable {
     @ToString.Exclude
     private String password;
 
-    private String realName;
+    private String nickname;
 
     /**
      * 1=启用 0=禁用

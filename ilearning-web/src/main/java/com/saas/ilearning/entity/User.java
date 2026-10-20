@@ -24,14 +24,14 @@ public class User implements Serializable {
     private Long id;
 
     /**
-     * user_name
+     * username
      */
-    private String userName;
+    private String username;
 
     /**
-     * real_name
+     * nickname
      */
-    private String realName;
+    private String nickname;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

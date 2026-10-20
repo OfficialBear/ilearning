@@ -110,8 +110,8 @@ public class AuthController {
     private static UserInfoVO toUserInfo(CurrentUser currentUser) {
         return UserInfoVO.builder()
                 .id(currentUser.getUserId())
-                .userName(currentUser.getUsername())
-                .realName(currentUser.getRealName())
+                .username(currentUser.getUsername())
+                .nickname(currentUser.getNickname())
                 .roles(currentUser.getRoles())
                 .build();
     }

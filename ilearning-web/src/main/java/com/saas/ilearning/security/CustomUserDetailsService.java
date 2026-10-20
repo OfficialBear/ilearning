@@ -32,12 +32,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private CurrentUser toLoginUser(User user) {
-        List<String> roles = userMapper.getRoleNamesByUserId(user.getId());
+        List<String> roles = userMapper.getRoleCodesByUserId(user.getId());
         return CurrentUser.builder()
                 .userId(user.getId())
-                .username(user.getUserName())
+                .username(user.getUsername())
                 .password(user.getPassword())
-                .realName(user.getRealName())
+                .nickname(user.getNickname())
                 .status(user.getStatus())
                 .roles(roles == null ? List.of() : roles)
                 .build();
