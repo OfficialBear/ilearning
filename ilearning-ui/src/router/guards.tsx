@@ -1,3 +1,5 @@
+import { Result } from 'antd';
+import type { ReactNode } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router';
 import AuthSplash from '@/components/AuthSplash';
 import LoginPage from '@/pages/login';
@@ -45,4 +47,19 @@ export function LoginGate() {
     return <Navigate to={from ?? '/'} replace />;
   }
   return <LoginPage />;
+}
+
+export function RequireRole({
+  roles,
+  children,
+}: {
+  roles: string[];
+  children: ReactNode;
+}) {
+  const { user } = useAuth();
+  const allowed = roles.some((role) => user?.roles?.includes(role));
+  if (!allowed) {
+    return <Result status="403" title="403" subTitle="没有访问权限" />;
+  }
+  return <>{children}</>;
 }

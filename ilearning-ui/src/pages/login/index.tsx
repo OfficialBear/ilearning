@@ -143,14 +143,14 @@ export default function LoginPage() {
           name="username"
           rules={[
             { required: true, message: '请输入用户名' },
-            { max: 32, message: '用户名最长 32 位' },
+            { max: 64, message: '用户名最长 64 位' },
           ]}
         >
           <Input
             prefix={<UserOutlined />}
             placeholder="请输入用户名"
             autoComplete="username"
-            maxLength={32}
+            maxLength={64}
           />
         </Form.Item>
         <Form.Item<LoginPayload>

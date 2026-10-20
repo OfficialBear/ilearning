@@ -13,8 +13,8 @@ export interface ApiResult<T> {
  */
 export interface UserInfo {
   id: number;
-  userName: string;
-  realName: string | null;
+  username: string;
+  nickname: string | null;
   roles: string[] | null;
 }
 

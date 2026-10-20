@@ -1,25 +1,32 @@
 import { Card, Col, Row, Typography } from 'antd';
 import { Link } from 'react-router';
-
-const entries = [
-  {
-    to: '/questions',
-    title: '试题管理',
-    description: '试题的录入、编辑与维护（待实现）',
-  },
-  {
-    to: '/question-banks',
-    title: '题库管理',
-    description: '题库的组织与分类管理（待实现）',
-  },
-  {
-    to: '/exams',
-    title: '考试管理',
-    description: '考试的创建与安排（待实现）',
-  },
-];
+import { useAuth } from '@/stores/auth';
 
 export default function HomePage() {
+  const { user } = useAuth();
+  const canManage = user?.roles?.includes('ADMIN') ?? false;
+  const entries = [
+    ...(canManage
+      ? [
+          {
+            to: '/questions',
+            title: '试题管理',
+            description: '试题的录入、编辑、预览与维护',
+          },
+          {
+            to: '/question-banks',
+            title: '题库管理',
+            description: '题库的组织与分类管理（待实现）',
+          },
+        ]
+      : []),
+    {
+      to: '/exams',
+      title: '考试管理',
+      description: '考试的创建与安排（待实现）',
+    },
+  ];
+
   return (
     <div>
       <Card style={{ marginBottom: 16 }}>

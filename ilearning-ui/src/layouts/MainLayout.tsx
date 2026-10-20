@@ -9,12 +9,6 @@ import { ApiError } from '@/utils/request';
 
 const { Header, Sider, Content } = Layout;
 
-const menuItems: MenuProps['items'] = APP_ROUTES.map((route) => ({
-  key: route.path,
-  icon: route.icon,
-  label: <Link to={route.path}>{route.title}</Link>,
-}));
-
 export default function MainLayout() {
   const { pathname } = useLocation();
   const { token } = theme.useToken();
@@ -22,8 +16,17 @@ export default function MainLayout() {
   const [messageApi, messageHolder] = message.useMessage();
   const user = useAuth().user;
 
+  const visibleRoutes = APP_ROUTES.filter(
+    (route) => !route.roles || route.roles.some((role) => user?.roles?.includes(role)),
+  );
+  const menuItems: MenuProps['items'] = visibleRoutes.map((route) => ({
+    key: route.path,
+    icon: route.icon,
+    label: <Link to={route.path}>{route.title}</Link>,
+  }));
+
   const activeRoute = resolveRoute(pathname);
-  const displayName = user?.realName || user?.userName || '';
+  const displayName = user?.nickname || user?.username || '';
   const initial = displayName !== '' ? displayName.charAt(0) : '?';
 
   const handleLogout = () => {

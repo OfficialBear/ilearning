@@ -15,6 +15,7 @@ export interface AppRoute {
   title: string;
   icon: ReactNode;
   element: ReactNode;
+  roles?: string[];
 }
 
 export const APP_ROUTES: AppRoute[] = [
@@ -24,12 +25,14 @@ export const APP_ROUTES: AppRoute[] = [
     title: '试题管理',
     icon: <FileTextOutlined />,
     element: <QuestionsPage />,
+    roles: ['ADMIN'],
   },
   {
     path: '/question-banks',
     title: '题库管理',
     icon: <DatabaseOutlined />,
     element: <QuestionBanksPage />,
+    roles: ['ADMIN'],
   },
   {
     path: '/exams',
