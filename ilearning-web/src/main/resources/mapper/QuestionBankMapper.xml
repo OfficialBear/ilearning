@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saas.ilearning.mapper.QuestionBankMapper">
+
+    <select id="listAvailable" resultType="com.saas.ilearning.vo.QuestionBankBriefVO">
+        SELECT id, title
+        FROM question_bank
+        WHERE status = 1
+        ORDER BY sort, id
+    </select>
+
+    <select id="listBriefsByIds" resultType="com.saas.ilearning.vo.QuestionBankBriefVO">
+        SELECT id, title
+        FROM question_bank
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY sort, id
+    </select>
+
+    <select id="getById" resultType="com.saas.ilearning.entity.QuestionBank">
+        SELECT id, title, description, sort, status, created_at, updated_at
+        FROM question_bank
+        WHERE id = #{id}
+    </select>
+
+</mapper>

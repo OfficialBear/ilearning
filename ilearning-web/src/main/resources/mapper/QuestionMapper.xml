@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saas.ilearning.mapper.QuestionMapper">
+
+    <sql id="baseColumns">
+        id, question_bank_id, question_type, difficulty, content, image_url, analysis, status, created_at, updated_at
+    </sql>
+
+    <sql id="queryWhere">
+        <where>
+            <if test="q.questionType != null">
+                AND q.question_type = #{q.questionType}
+            </if>
+            <if test="q.difficulty != null">
+                AND q.difficulty = #{q.difficulty}
+            </if>
+            <if test="q.keyword != null and q.keyword != ''">
+                AND q.content LIKE CONCAT('%', #{q.keyword}, '%')
+            </if>
+            <if test="q.questionBankId != null">
+                AND q.question_bank_id = #{q.questionBankId}
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insert" parameterType="com.saas.ilearning.entity.Question"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question (question_bank_id, question_type, difficulty, content, image_url, analysis)
+        VALUES (#{questionBankId}, #{questionType}, #{difficulty}, #{content}, #{imageUrl}, #{analysis})
+    </insert>
+
+    <update id="update" parameterType="com.saas.ilearning.entity.Question">
+        UPDATE question
+        SET question_bank_id = #{questionBankId},
+            question_type    = #{questionType},
+            difficulty       = #{difficulty},
+            content          = #{content},
+            image_url        = #{imageUrl},
+            analysis         = #{analysis}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getById" resultType="com.saas.ilearning.entity.Question">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM question
+        WHERE id = #{id}
+    </select>
+
+    <select id="page" resultType="com.saas.ilearning.vo.QuestionListItemVO">
+        SELECT q.id,
+               q.question_bank_id,
+               q.question_type,
+               q.difficulty,
+               q.content,
+               q.image_url,
+               q.created_at,
+               q.updated_at
+        FROM question q
+        <include refid="queryWhere"/>
+        ORDER BY q.updated_at DESC, q.id DESC
+        LIMIT #{q.offset}, #{q.pageSize}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*)
+        FROM question q
+        <include refid="queryWhere"/>
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM question WHERE id = #{id}
+    </delete>
+
+    <insert id="insertOptions">
+        INSERT INTO question_option (question_id, option_key, content, image_url, is_correct)
+        VALUES
+        <foreach collection="options" item="option" separator=",">
+            (#{option.questionId}, #{option.optionKey}, #{option.content}, #{option.imageUrl}, #{option.isCorrect})
+        </foreach>
+    </insert>
+
+    <delete id="deleteOptionsByQuestionId">
+        DELETE FROM question_option WHERE question_id = #{questionId}
+    </delete>
+
+    <select id="listOptionsByQuestionId" resultType="com.saas.ilearning.entity.QuestionOption">
+        SELECT id, question_id, option_key, content, image_url, is_correct
+        FROM question_option
+        WHERE question_id = #{questionId}
+        ORDER BY option_key
+    </select>
+
+    <select id="countPaperReferences" resultType="long">
+        SELECT COUNT(*)
+        FROM paper_question
+        WHERE question_id = #{questionId}
+    </select>
+
+</mapper>
