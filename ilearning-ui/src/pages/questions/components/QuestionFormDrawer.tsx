@@ -13,7 +13,7 @@ import {
   message,
   theme,
 } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ImageUpload from '@/components/ImageUpload';
 import { createQuestion, fetchQuestionDetail, updateQuestion } from '@/services/questions';
 import type {
@@ -115,6 +115,16 @@ function QuestionFormContent({
   const [reloadToken, setReloadToken] = useState(0);
   const [detail, setDetail] = useState<QuestionDetail | null>(null);
   const { token } = theme.useToken();
+
+  // 停用题库不会出现在可用题库列表中，但其中的既有题目仍需展示原题库并可继续维护。
+  const bankOptions = useMemo(() => {
+    const options = banks.map((bank) => ({ value: bank.id, label: bank.title }));
+    const currentBank = detail?.questionBank;
+    if (currentBank && !options.some((option) => option.value === currentBank.id)) {
+      options.unshift({ value: currentBank.id, label: `${currentBank.title}（已停用）` });
+    }
+    return options;
+  }, [banks, detail]);
 
   const watchedType = Form.useWatch('questionType', form) as QuestionType | undefined;
   const type: QuestionType = watchedType ?? 1;
@@ -310,10 +320,7 @@ function QuestionFormContent({
                 optionFilterProp="label"
                 placeholder="选择所属题库"
                 style={{ width: '100%' }}
-                options={banks.map((bank) => ({
-                  value: bank.id,
-                  label: bank.title,
-                }))}
+                options={bankOptions}
               />
             </Form.Item>
           </Col>

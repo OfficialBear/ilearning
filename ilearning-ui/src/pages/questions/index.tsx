@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Flex, Grid, message, theme } from 'antd';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { copyQuestion, deleteQuestion, fetchQuestions } from '@/services/questions';
 import { fetchAvailableBanks } from '@/services/questionBanks';
 import type { BankBrief, QuestionListItem } from '@/types/question';
@@ -18,7 +19,11 @@ export default function QuestionsPage() {
   const { token } = theme.useToken();
   const screens = Grid.useBreakpoint();
   const isMobile = !screens.sm;
-  const [filters, setFilters] = useState<QuestionFilters>({});
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState<QuestionFilters>(() => {
+    const bankId = Number(searchParams.get('questionBankId'));
+    return Number.isInteger(bankId) && bankId > 0 ? { questionBankId: bankId } : {};
+  });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [records, setRecords] = useState<QuestionListItem[]>([]);
@@ -78,16 +83,26 @@ export default function QuestionsPage() {
     }
   };
 
+  const syncBankQuery = (nextFilters: QuestionFilters) => {
+    const nextParams = new URLSearchParams();
+    if (nextFilters.questionBankId != null) {
+      nextParams.set('questionBankId', String(nextFilters.questionBankId));
+    }
+    setSearchParams(nextParams, { replace: true });
+  };
+
   const handleSearch = (nextFilters: QuestionFilters) => {
     setLoading(true);
     setFilters(nextFilters);
     setPage(1);
+    syncBankQuery(nextFilters);
   };
 
   const handleReset = () => {
     setLoading(true);
     setFilters({});
     setPage(1);
+    setSearchParams({}, { replace: true });
   };
 
   const handlePageChange = (nextPage: number, nextPageSize: number) => {
@@ -142,6 +157,7 @@ export default function QuestionsPage() {
             banks={banks}
             loading={loading}
             stacked={isMobile}
+            initialValues={filters}
             onSearch={handleSearch}
             onReset={handleReset}
           />

@@ -8,6 +8,7 @@ interface QuestionFilterBarProps {
   banks: BankBrief[];
   loading?: boolean;
   stacked?: boolean;
+  initialValues?: QuestionFilters;
   onSearch: (filters: QuestionFilters) => void;
   onReset: () => void;
 }
@@ -16,6 +17,7 @@ export default function QuestionFilterBar({
   banks,
   loading = false,
   stacked = false,
+  initialValues,
   onSearch,
   onReset,
 }: QuestionFilterBarProps) {
@@ -31,6 +33,7 @@ export default function QuestionFilterBar({
     <Form
       form={form}
       layout="inline"
+      initialValues={initialValues}
       onFinish={onSearch}
       style={{
         flex: 1,

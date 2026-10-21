@@ -53,3 +53,30 @@ export interface QuestionSavePayload {
   questionBankId: number;
   options: QuestionOptionPayload[];
 }
+
+export type BankStatus = 0 | 1;
+
+export interface QuestionBankTypeCount {
+  questionType: QuestionType;
+  total: number;
+}
+
+export interface QuestionBankListItem {
+  id: number;
+  title: string;
+  description: string;
+  sort: number;
+  status: BankStatus;
+  createdAt: string;
+  updatedAt: string;
+  totalQuestions: number;
+  enabledQuestions: number;
+  questionTypeCounts: QuestionBankTypeCount[];
+}
+
+export interface QuestionBankSavePayload {
+  title: string;
+  description: string;
+  sort: number;
+  status: BankStatus;
+}
