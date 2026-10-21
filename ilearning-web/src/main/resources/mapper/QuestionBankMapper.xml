@@ -25,4 +25,75 @@
         WHERE id = #{id}
     </select>
 
+    <sql id="queryWhere">
+        <where>
+            <if test="q.status != null">
+                AND status = #{q.status}
+            </if>
+            <if test="q.keyword != null and q.keyword != ''">
+                AND (title LIKE CONCAT('%', #{q.keyword}, '%')
+                    OR description LIKE CONCAT('%', #{q.keyword}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <select id="page" resultType="com.saas.ilearning.vo.QuestionBankListItemVO">
+        SELECT id, title, description, sort, status, created_at, updated_at
+        FROM question_bank
+        <include refid="queryWhere"/>
+        ORDER BY sort, id
+        LIMIT #{q.offset}, #{q.pageSize}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*)
+        FROM question_bank
+        <include refid="queryWhere"/>
+    </select>
+
+    <insert id="insert" parameterType="com.saas.ilearning.entity.QuestionBank"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question_bank (title, description, sort, status)
+        VALUES (#{title}, #{description}, #{sort}, #{status})
+    </insert>
+
+    <update id="update" parameterType="com.saas.ilearning.entity.QuestionBank">
+        UPDATE question_bank
+        SET title       = #{title},
+            description = #{description},
+            sort        = #{sort},
+            status      = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE question_bank
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM question_bank WHERE id = #{id}
+    </delete>
+
+    <select id="countQuestions" resultType="long">
+        SELECT COUNT(*)
+        FROM question
+        WHERE question_bank_id = #{bankId}
+    </select>
+
+    <select id="listQuestionStats" resultType="com.saas.ilearning.vo.QuestionBankQuestionStatVO">
+        SELECT question_bank_id                              AS bankId,
+               question_type                                 AS questionType,
+               COUNT(*)                                      AS total,
+               COUNT(CASE WHEN status = 1 THEN 1 END)        AS enabled
+        FROM question
+        WHERE question_bank_id IN
+        <foreach collection="bankIds" item="bankId" open="(" separator="," close=")">
+            #{bankId}
+        </foreach>
+        GROUP BY question_bank_id, question_type
+        ORDER BY question_bank_id, question_type
+    </select>
+
 </mapper>

@@ -140,7 +140,10 @@ public class QuestionServiceImpl implements QuestionService {
     public void update(Long id, QuestionSaveDTO dto) {
         Question existing = requireQuestion(id);
         questionValidator.validate(dto);
-        questionBankService.ensureAvailable(dto.getQuestionBankId());
+        // 仅当题目变更所属题库时校验目标题库可用；停用题库中的既有题目仍允许维护。
+        if (!Objects.equals(existing.getQuestionBankId(), dto.getQuestionBankId())) {
+            questionBankService.ensureAvailable(dto.getQuestionBankId());
+        }
 
         long references = questionMapper.countPaperReferences(id);
         if (references > 0) {

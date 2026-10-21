@@ -30,4 +30,6 @@ public final class MessageConstant {
     public static final String QUESTION_IN_USE_EDIT_FORBIDDEN = "试题已被试卷引用，题干、选项和正确答案不可修改，请使用复制功能创建新题";
     public static final String QUESTION_BANK_NOT_FOUND = "题库不存在，请刷新后重试";
     public static final String QUESTION_BANK_DISABLED = "题库已停用，无法使用";
+    public static final String QUESTION_BANK_STATUS_INVALID = "题库状态不合法";
+    public static final String QUESTION_BANK_HAS_QUESTIONS = "题库下仍有试题，无法删除，请先移除或转移试题";
 }
