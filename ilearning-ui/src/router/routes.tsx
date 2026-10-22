@@ -1,5 +1,6 @@
 import {
   DatabaseOutlined,
+  FileDoneOutlined,
   FileTextOutlined,
   HomeOutlined,
   ScheduleOutlined,
@@ -7,6 +8,7 @@ import {
 import type { ReactNode } from 'react';
 import ExamsPage from '@/pages/exams';
 import HomePage from '@/pages/home';
+import PapersPage from '@/pages/papers';
 import QuestionBanksPage from '@/pages/question-banks';
 import QuestionsPage from '@/pages/questions';
 
@@ -32,6 +34,13 @@ export const APP_ROUTES: AppRoute[] = [
     title: '题库管理',
     icon: <DatabaseOutlined />,
     element: <QuestionBanksPage />,
+    roles: ['ADMIN'],
+  },
+  {
+    path: '/papers',
+    title: '试卷管理',
+    icon: <FileDoneOutlined />,
+    element: <PapersPage />,
     roles: ['ADMIN'],
   },
   {

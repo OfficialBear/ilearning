@@ -16,7 +16,12 @@ export default function HomePage() {
           {
             to: '/question-banks',
             title: '题库管理',
-            description: '题库的组织与分类管理（待实现）',
+            description: '题库的组织与分类管理',
+          },
+          {
+            to: '/papers',
+            title: '试卷管理',
+            description: '组卷、分值设置、发布与归档',
           },
         ]
       : []),
