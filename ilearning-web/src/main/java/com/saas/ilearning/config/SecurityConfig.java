@@ -42,7 +42,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/questions", "/questions/**",
-                                "/question-banks", "/question-banks/**").hasRole(RoleConstant.ADMIN)
+                                "/question-banks", "/question-banks/**",
+                                "/papers", "/papers/**").hasRole(RoleConstant.ADMIN)
                         .anyRequest().authenticated())
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(restAuthenticationEntryPoint)

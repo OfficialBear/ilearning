@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saas.ilearning.mapper.PaperMapper">
+
+    <sql id="queryWhere">
+        <where>
+            <if test="q.status != null">
+                AND p.status = #{q.status}
+            </if>
+            <if test="q.keyword != null and q.keyword != ''">
+                AND (p.title LIKE CONCAT('%', #{q.keyword}, '%')
+                    OR p.description LIKE CONCAT('%', #{q.keyword}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <select id="page" resultType="com.saas.ilearning.vo.PaperListItemVO">
+        SELECT p.id, p.title, p.description, p.total_score, p.status, p.created_by,
+               p.created_at, p.updated_at
+        FROM paper p
+        <include refid="queryWhere"/>
+        ORDER BY p.updated_at DESC, p.id DESC
+        LIMIT #{q.offset}, #{q.pageSize}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*)
+        FROM paper p
+        <include refid="queryWhere"/>
+    </select>
+
+    <select id="getById" resultType="com.saas.ilearning.entity.Paper">
+        SELECT id, title, description, total_score, status, created_by, created_at, updated_at
+        FROM paper
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.saas.ilearning.entity.Paper"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO paper (title, description, total_score, status, created_by)
+        VALUES (#{title}, #{description}, #{totalScore}, #{status}, #{createdBy})
+    </insert>
+
+    <update id="update" parameterType="com.saas.ilearning.entity.Paper">
+        UPDATE paper
+        SET title       = #{title},
+            description = #{description},
+            total_score = #{totalScore}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE paper
+        SET status = #{status}
+        WHERE id = #{id}
+          AND status = #{expectedStatus}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM paper WHERE id = #{id}
+    </delete>
+
+    <select id="listQuestionsByPaperId" resultType="com.saas.ilearning.entity.PaperQuestion">
+        SELECT id, paper_id, question_id, sort, score, question_snapshot
+        FROM paper_question
+        WHERE paper_id = #{paperId}
+        ORDER BY sort
+    </select>
+
+    <delete id="deleteQuestionsByPaperId">
+        DELETE FROM paper_question WHERE paper_id = #{paperId}
+    </delete>
+
+    <insert id="insertQuestions">
+        INSERT INTO paper_question (paper_id, question_id, sort, score, question_snapshot)
+        VALUES
+        <foreach collection="questions" item="item" separator=",">
+            (#{item.paperId}, #{item.questionId}, #{item.sort}, #{item.score}, #{item.questionSnapshot})
+        </foreach>
+    </insert>
+
+    <update id="updateQuestionSnapshot">
+        UPDATE paper_question
+        SET question_snapshot = #{snapshot}
+        WHERE paper_id = #{paperId}
+          AND question_id = #{questionId}
+    </update>
+
+    <select id="listQuestionCounts" resultType="com.saas.ilearning.vo.PaperQuestionCountVO">
+        SELECT paper_id AS paperId, COUNT(*) AS questionCount
+        FROM paper_question
+        WHERE paper_id IN
+        <foreach collection="paperIds" item="paperId" open="(" separator="," close=")">
+            #{paperId}
+        </foreach>
+        GROUP BY paper_id
+    </select>
+
+    <select id="countExamsByPaperId" resultType="long">
+        SELECT COUNT(*)
+        FROM exam
+        WHERE paper_id = #{paperId}
+    </select>
+
+</mapper>

@@ -30,5 +30,9 @@ public interface QuestionMapper {
 
     List<QuestionOption> listOptionsByQuestionId(@Param("questionId") Long questionId);
 
+    List<Question> listByIds(@Param("ids") List<Long> ids);
+
+    List<QuestionOption> listOptionsByQuestionIds(@Param("ids") List<Long> ids);
+
     long countPaperReferences(@Param("questionId") Long questionId);
 }

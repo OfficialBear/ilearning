@@ -97,4 +97,24 @@
         WHERE question_id = #{questionId}
     </select>
 
+    <select id="listByIds" resultType="com.saas.ilearning.entity.Question">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM question
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="listOptionsByQuestionIds" resultType="com.saas.ilearning.entity.QuestionOption">
+        SELECT id, question_id, option_key, content, image_url, is_correct
+        FROM question_option
+        WHERE question_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY question_id, option_key
+    </select>
+
 </mapper>

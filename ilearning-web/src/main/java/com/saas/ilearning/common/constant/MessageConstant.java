@@ -32,4 +32,16 @@ public final class MessageConstant {
     public static final String QUESTION_BANK_DISABLED = "题库已停用，无法使用";
     public static final String QUESTION_BANK_STATUS_INVALID = "题库状态不合法";
     public static final String QUESTION_BANK_HAS_QUESTIONS = "题库下仍有试题，无法删除，请先移除或转移试题";
+
+    public static final String PAPER_NOT_FOUND = "试卷不存在，请刷新后重试";
+    public static final String PAPER_EDIT_FORBIDDEN = "只有草稿状态的试卷可以编辑";
+    public static final String PAPER_DELETE_FORBIDDEN = "只有草稿状态的试卷可以删除";
+    public static final String PAPER_QUESTIONS_REQUIRED = "试卷至少需要一道题目才能发布";
+    public static final String PAPER_QUESTION_NOT_FOUND = "试卷中包含不存在的题目，请刷新后重试";
+    public static final String PAPER_QUESTION_DISABLED = "试卷中包含已停用的题目，请先启用或更换题目";
+    public static final String PAPER_QUESTION_DUPLICATE = "同一道题目不能重复加入试卷";
+    public static final String PAPER_STATUS_INVALID = "试卷状态不合法";
+    public static final String PAPER_STATUS_TRANSITION_INVALID = "试卷状态流转不合法";
+    public static final String PAPER_IN_USE = "试卷已被考试活动引用，无法删除";
+    public static final String PAPER_SNAPSHOT_FAILED = "生成试卷快照失败，请稍后重试";
 }
