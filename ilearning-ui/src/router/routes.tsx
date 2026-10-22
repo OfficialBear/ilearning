@@ -48,6 +48,7 @@ export const APP_ROUTES: AppRoute[] = [
     title: '考试管理',
     icon: <ScheduleOutlined />,
     element: <ExamsPage />,
+    roles: ['ADMIN'],
   },
 ];
 

@@ -23,13 +23,13 @@ export default function HomePage() {
             title: '试卷管理',
             description: '组卷、分值设置、发布与归档',
           },
+          {
+            to: '/exams',
+            title: '考试管理',
+            description: '考试活动的创建、开放时间与发布管理',
+          },
         ]
       : []),
-    {
-      to: '/exams',
-      title: '考试管理',
-      description: '考试的创建与安排（待实现）',
-    },
   ];
 
   return (

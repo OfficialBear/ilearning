@@ -14,3 +14,11 @@ export function formatDateTime(value: string | null | undefined): string {
     minute: '2-digit',
   }).format(date);
 }
+
+/** 去掉无意义的小数尾零，例如 10.00 -> 10、10.50 -> 10.5。 */
+export function formatScore(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(Number(value))) {
+    return '0';
+  }
+  return Number(value).toFixed(2).replace(/\.?0+$/, '');
+}
