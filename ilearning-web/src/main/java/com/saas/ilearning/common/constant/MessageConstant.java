@@ -44,4 +44,14 @@ public final class MessageConstant {
     public static final String PAPER_STATUS_TRANSITION_INVALID = "试卷状态流转不合法";
     public static final String PAPER_IN_USE = "试卷已被考试活动引用，无法删除";
     public static final String PAPER_SNAPSHOT_FAILED = "生成试卷快照失败，请稍后重试";
+
+    public static final String EXAM_NOT_FOUND = "考试不存在，请刷新后重试";
+    public static final String EXAM_EDIT_FORBIDDEN = "只有草稿状态的考试可以编辑";
+    public static final String EXAM_DELETE_FORBIDDEN = "只有草稿状态的考试可以删除";
+    public static final String EXAM_STATUS_INVALID = "考试状态不合法";
+    public static final String EXAM_STATUS_TRANSITION_INVALID = "考试状态流转不合法";
+    public static final String EXAM_PAPER_NOT_AVAILABLE = "考试关联的试卷未发布或已归档，请重新选择试卷";
+    public static final String EXAM_PASSING_SCORE_INVALID = "及格分数不能超过试卷总分";
+    public static final String EXAM_TIME_RANGE_INVALID = "结束时间必须晚于开始时间";
+    public static final String EXAM_IN_USE = "考试已有考生记录，无法删除";
 }
