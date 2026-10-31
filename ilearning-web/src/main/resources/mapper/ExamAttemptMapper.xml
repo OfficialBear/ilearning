@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saas.ilearning.mapper.ExamAttemptMapper">
+
+    <sql id="attemptColumns">
+        id, exam_id, user_id, attempt_no, status, total_score, passing_score,
+        user_score, is_passed, started_at, deadline, submitted_at, graded_at,
+        time_spent_seconds, created_at, updated_at
+    </sql>
+
+    <select id="findInProgress" resultType="com.saas.ilearning.entity.ExamAttempt">
+        SELECT <include refid="attemptColumns"/>
+        FROM exam_attempt
+        WHERE user_id = #{userId}
+          AND exam_id = #{examId}
+          AND status = 1
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <select id="listExpiredInProgress" resultType="com.saas.ilearning.entity.ExamAttempt">
+        SELECT <include refid="attemptColumns"/>
+        FROM exam_attempt
+        WHERE user_id = #{userId}
+          AND status = 1
+          AND deadline IS NOT NULL
+          AND deadline &lt;= #{now}
+    </select>
+
+    <select id="countEffectiveAttempts" resultType="int">
+        SELECT COUNT(*)
+        FROM exam_attempt
+        WHERE user_id = #{userId}
+          AND exam_id = #{examId}
+          AND status IN (1, 2, 3)
+    </select>
+
+    <select id="maxAttemptNo" resultType="int">
+        SELECT COALESCE(MAX(attempt_no), 0)
+        FROM exam_attempt
+        WHERE user_id = #{userId}
+          AND exam_id = #{examId}
+    </select>
+
+    <insert id="insert" parameterType="com.saas.ilearning.entity.ExamAttempt"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO exam_attempt (exam_id, user_id, attempt_no, status, total_score,
+                                  passing_score, started_at, deadline)
+        VALUES (#{examId}, #{userId}, #{attemptNo}, #{status}, #{totalScore},
+                #{passingScore}, #{startedAt}, #{deadline})
+    </insert>
+
+    <select id="getById" resultType="com.saas.ilearning.entity.ExamAttempt">
+        SELECT <include refid="attemptColumns"/>
+        FROM exam_attempt
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByIdForUpdate" resultType="com.saas.ilearning.entity.ExamAttempt">
+        SELECT <include refid="attemptColumns"/>
+        FROM exam_attempt
+        WHERE id = #{id}
+        FOR UPDATE
+    </select>
+
+    <update id="finalizeAttempt">
+        UPDATE exam_attempt
+        SET status             = #{status},
+            user_score         = #{userScore},
+            is_passed          = #{isPassed},
+            submitted_at       = #{submittedAt},
+            graded_at          = #{gradedAt},
+            time_spent_seconds = #{timeSpentSeconds}
+        WHERE id = #{id}
+          AND status = #{expectedStatus}
+    </update>
+
+    <select id="listAvailable" resultType="com.saas.ilearning.vo.UserExamVO">
+        SELECT e.id,
+               e.title,
+               e.description,
+               e.duration_minutes,
+               e.max_attempts,
+               e.passing_score,
+               e.start_time,
+               e.end_time,
+               p.title       AS paper_title,
+               p.total_score AS total_score,
+               (SELECT COUNT(*)
+                FROM exam_attempt a
+                WHERE a.exam_id = e.id
+                  AND a.user_id = #{userId}
+                  AND a.status IN (1, 2, 3)) AS attempts_used,
+               (SELECT a.id
+                FROM exam_attempt a
+                WHERE a.exam_id = e.id
+                  AND a.user_id = #{userId}
+                  AND a.status = 1
+                ORDER BY a.id DESC
+                LIMIT 1) AS in_progress_attempt_id
+        FROM exam e
+        JOIN paper p ON p.id = e.paper_id
+        WHERE e.status = 1
+          AND (e.start_time IS NULL OR e.start_time &lt;= #{now})
+          AND (e.end_time IS NULL OR e.end_time &gt;= #{now})
+        <if test="q.keyword != null and q.keyword != ''">
+            AND (e.title LIKE CONCAT('%', #{q.keyword}, '%')
+                OR e.description LIKE CONCAT('%', #{q.keyword}, '%')
+                OR p.title LIKE CONCAT('%', #{q.keyword}, '%'))
+        </if>
+        ORDER BY (e.end_time IS NULL), e.end_time ASC, e.id DESC
+        LIMIT #{q.offset}, #{q.pageSize}
+    </select>
+
+    <select id="countAvailable" resultType="long">
+        SELECT COUNT(*)
+        FROM exam e
+        JOIN paper p ON p.id = e.paper_id
+        WHERE e.status = 1
+          AND (e.start_time IS NULL OR e.start_time &lt;= #{now})
+          AND (e.end_time IS NULL OR e.end_time &gt;= #{now})
+        <if test="q.keyword != null and q.keyword != ''">
+            AND (e.title LIKE CONCAT('%', #{q.keyword}, '%')
+                OR e.description LIKE CONCAT('%', #{q.keyword}, '%')
+                OR p.title LIKE CONCAT('%', #{q.keyword}, '%'))
+        </if>
+    </select>
+
+    <select id="listHistory" resultType="com.saas.ilearning.vo.AttemptHistoryVO">
+        SELECT a.id,
+               a.exam_id,
+               e.title AS exam_title,
+               a.attempt_no,
+               a.status,
+               a.user_score,
+               a.total_score,
+               a.passing_score,
+               a.is_passed,
+               a.started_at,
+               a.deadline,
+               a.submitted_at
+        FROM exam_attempt a
+        JOIN exam e ON e.id = a.exam_id
+        WHERE a.user_id = #{userId}
+        ORDER BY a.started_at DESC, a.id DESC
+        LIMIT #{q.offset}, #{q.pageSize}
+    </select>
+
+    <select id="countHistory" resultType="long">
+        SELECT COUNT(*)
+        FROM exam_attempt
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>

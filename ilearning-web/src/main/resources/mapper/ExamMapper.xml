@@ -48,6 +48,14 @@
         WHERE id = #{id}
     </select>
 
+    <select id="getByIdForUpdate" resultType="com.saas.ilearning.entity.Exam">
+        SELECT id, paper_id, title, description, duration_minutes, max_attempts,
+               passing_score, start_time, end_time, status, created_by, created_at, updated_at
+        FROM exam
+        WHERE id = #{id}
+        FOR UPDATE
+    </select>
+
     <select id="getVOById" resultType="com.saas.ilearning.vo.ExamVO">
         SELECT <include refid="voColumns"/>
         FROM exam e

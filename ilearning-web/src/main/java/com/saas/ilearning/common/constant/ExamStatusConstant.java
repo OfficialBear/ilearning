@@ -9,12 +9,12 @@ public final class ExamStatusConstant {
     }
 
     /**
-     * 草稿：可编辑、可删除，考生不可见。
+     * 草稿：可编辑、可删除，用户不可见。
      */
     public static final Integer DRAFT = 0;
 
     /**
-     * 已发布：按开放时间对考生开放，不可再修改规则。
+     * 已发布：按开放时间对用户开放，不可再修改规则。
      */
     public static final Integer PUBLISHED = 1;
 

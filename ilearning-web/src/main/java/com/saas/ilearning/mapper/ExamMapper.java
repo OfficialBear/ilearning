@@ -17,6 +17,8 @@ public interface ExamMapper {
 
     Exam getById(@Param("id") Long id);
 
+    Exam getByIdForUpdate(@Param("id") Long id);
+
     ExamVO getVOById(@Param("id") Long id);
 
     int insert(Exam exam);

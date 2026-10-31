@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * 考试活动实体，对应 {@code exam} 表。
  *
  * <p>考试只定义“怎么考”：引用试卷、开放时间、时长、次数与及格线；
- * 考生每次作答由 {@code exam_attempt} 记录。</p>
+ * 用户每次作答由 {@code exam_attempt} 记录。</p>
  */
 @Data
 @Builder
@@ -37,7 +37,7 @@ public class Exam implements Serializable {
     private Integer durationMinutes;
 
     /**
-     * 每位考生的最大参加次数，0 表示不限次数。
+     * 每位用户的最大参加次数，0 表示不限次数。
      */
     private Integer maxAttempts;
 

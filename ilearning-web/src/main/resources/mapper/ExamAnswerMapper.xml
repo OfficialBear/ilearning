@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saas.ilearning.mapper.ExamAnswerMapper">
+
+    <select id="listByAttemptId" resultType="com.saas.ilearning.entity.ExamAnswer">
+        SELECT id, exam_attempt_id, paper_question_id, answer_content, is_correct,
+               score, actual_score, answered_at, created_at, updated_at
+        FROM exam_answer
+        WHERE exam_attempt_id = #{attemptId}
+        ORDER BY paper_question_id
+    </select>
+
+    <insert id="upsert" parameterType="com.saas.ilearning.entity.ExamAnswer">
+        INSERT INTO exam_answer (exam_attempt_id, paper_question_id, answer_content,
+                                 is_correct, score, actual_score, answered_at)
+        VALUES (#{examAttemptId}, #{paperQuestionId}, #{answerContent},
+                NULL, #{score}, NULL, #{answeredAt})
+        ON DUPLICATE KEY UPDATE
+            answer_content = VALUES(answer_content),
+            is_correct     = NULL,
+            score          = VALUES(score),
+            actual_score   = NULL,
+            answered_at    = VALUES(answered_at)
+    </insert>
+
+    <delete id="deleteAnswer">
+        DELETE FROM exam_answer
+        WHERE exam_attempt_id = #{attemptId}
+          AND paper_question_id = #{paperQuestionId}
+    </delete>
+
+    <update id="updateGrade">
+        UPDATE exam_answer
+        SET is_correct   = #{isCorrect},
+            actual_score = #{actualScore}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

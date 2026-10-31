@@ -53,5 +53,20 @@ public final class MessageConstant {
     public static final String EXAM_PAPER_NOT_AVAILABLE = "考试关联的试卷未发布或已归档，请重新选择试卷";
     public static final String EXAM_PASSING_SCORE_INVALID = "及格分数不能超过试卷总分";
     public static final String EXAM_TIME_RANGE_INVALID = "结束时间必须晚于开始时间";
-    public static final String EXAM_IN_USE = "考试已有考生记录，无法删除";
+    public static final String EXAM_IN_USE = "考试已有用户记录，无法删除";
+
+    public static final String EXAM_NOT_AVAILABLE = "考试未发布或已关闭";
+    public static final String EXAM_NOT_OPEN = "考试尚未开始";
+    public static final String EXAM_ENDED = "考试已结束";
+    public static final String EXAM_ATTEMPTS_EXHAUSTED = "已达到该考试的最大参加次数";
+    public static final String ATTEMPT_NOT_FOUND = "考试记录不存在，请刷新后重试";
+    public static final String ATTEMPT_NOT_IN_PROGRESS = "该次考试已交卷，无法继续作答";
+    public static final String ATTEMPT_EXPIRED = "考试时间已到，系统已自动交卷，请查看考试记录";
+    public static final String ATTEMPT_AUTO_SUBMITTED = "上次考试已超时并自动交卷，请查看考试记录";
+    public static final String ATTEMPT_NOT_SUBMITTED = "考试尚未交卷，暂无成绩";
+    public static final String ANSWER_QUESTION_INVALID = "题目不属于当前试卷";
+    public static final String ANSWER_OPTION_INVALID = "答案选项不合法";
+    public static final String ANSWER_TEXT_INVALID = "答案内容不合法";
+    public static final String ANSWER_SAVE_FAILED = "保存答案失败，请稍后重试";
+    public static final String PAPER_CONTENT_INVALID = "试卷内容异常，请联系管理员";
 }
