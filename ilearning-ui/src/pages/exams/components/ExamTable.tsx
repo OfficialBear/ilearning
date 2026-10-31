@@ -70,7 +70,7 @@ export default function ExamTable({
             description={
               record.paperStatus !== 1
                 ? '关联试卷已不是已发布状态，请先更换试卷。'
-                : '发布后考试规则冻结，将按开放时间面向考生生效。'
+                : '发布后考试规则冻结，将按开放时间面向用户生效。'
             }
             okText="发布"
             cancelText="取消"

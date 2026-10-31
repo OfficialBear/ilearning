@@ -17,7 +17,9 @@ export default function MainLayout() {
   const user = useAuth().user;
 
   const visibleRoutes = APP_ROUTES.filter(
-    (route) => !route.roles || route.roles.some((role) => user?.roles?.includes(role)),
+    (route) =>
+      !route.hidden &&
+      (!route.roles || route.roles.some((role) => user?.roles?.includes(role))),
   );
   const menuItems: MenuProps['items'] = visibleRoutes.map((route) => ({
     key: route.path,

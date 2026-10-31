@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import RouteError from '@/components/RouteError';
 import MainLayout from '@/layouts/MainLayout';
+import AttemptPage from '@/pages/exam-center/AttemptPage';
 import { LoginGate, RequireAuth, RequireRole } from '@/router/guards';
 import { APP_ROUTES } from '@/router/routes';
 
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
     element: <RequireAuth />,
     errorElement: <RouteError />,
     children: [
+      {
+        path: 'exam-center/attempt/:attemptId',
+        element: <AttemptPage />,
+      },
       {
         element: <MainLayout />,
         children: [

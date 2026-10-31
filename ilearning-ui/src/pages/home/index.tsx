@@ -6,6 +6,11 @@ export default function HomePage() {
   const { user } = useAuth();
   const canManage = user?.roles?.includes('ADMIN') ?? false;
   const entries = [
+    {
+      to: '/exam-center',
+      title: '考试中心',
+      description: '参加考试、作答与查看成绩',
+    },
     ...(canManage
       ? [
           {

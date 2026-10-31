@@ -3,9 +3,12 @@ import {
   FileDoneOutlined,
   FileTextOutlined,
   HomeOutlined,
+  ReadOutlined,
   ScheduleOutlined,
 } from '@ant-design/icons';
 import type { ReactNode } from 'react';
+import AttemptResultPage from '@/pages/exam-center/AttemptResultPage';
+import ExamCenterPage from '@/pages/exam-center';
 import ExamsPage from '@/pages/exams';
 import HomePage from '@/pages/home';
 import PapersPage from '@/pages/papers';
@@ -18,6 +21,7 @@ export interface AppRoute {
   icon: ReactNode;
   element: ReactNode;
   roles?: string[];
+  hidden?: boolean;
 }
 
 export const APP_ROUTES: AppRoute[] = [
@@ -42,6 +46,19 @@ export const APP_ROUTES: AppRoute[] = [
     icon: <FileDoneOutlined />,
     element: <PapersPage />,
     roles: ['ADMIN'],
+  },
+  {
+    path: '/exam-center',
+    title: '考试中心',
+    icon: <ReadOutlined />,
+    element: <ExamCenterPage />,
+  },
+  {
+    path: '/exam-center/result/:attemptId',
+    title: '考试结果',
+    icon: <ReadOutlined />,
+    element: <AttemptResultPage />,
+    hidden: true,
   },
   {
     path: '/exams',
